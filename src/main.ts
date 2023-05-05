@@ -98,81 +98,175 @@
 // // ele.src
 
 
-class Coder{
-    secondlang! : string 
-    constructor(
-        public readonly name:string,
-        private age:number,
-        protected lang:string = "Ts"
-    ){
-        this.name = name
-        this.age = age
-        this.lang = lang
+// class Coder{
+//     secondlang! : string 
+//     constructor(
+//         public readonly name:string,
+//         private age:number,
+//         protected lang:string = "Ts"
+//     ){
+//         this.name = name
+//         this.age = age
+//         this.lang = lang
+//     }
+//     public getAge(){
+//         return this.age;
+//     }
+// }
+// class WebDev extends Coder{
+//     constructor(
+//         public comp:string,
+//         name:string,
+//         age:number,
+//         lang:string
+//     ){
+//         super(name,age,lang)
+//         this.comp = comp
+//     }
+//     public getLang(){
+//         return this.lang;
+//     }
+// }
+
+
+// const c1 = new Coder('Vidur',20);
+// c1.name
+
+
+// interface Musician{
+//     name: string,
+//     instrument:string
+//     play(action:string):string
+// }
+
+// class Guitarist implements Musician{
+//     public name: string
+//     instrument: string
+//     constructor(name:string, instrument:string){
+//         this.name = name
+//         this.instrument = instrument
+//     }
+//     play(action: string): string {
+//         return `${this.name} ${action} the ${this.instrument}`;
+//     }
+// }
+// const g1 = new Guitarist('Abc','Guitar');
+// console.log(g1.play("strums"));
+
+// //static property and methods
+// class Person{
+//     static count:number = 0;
+//     private id:number
+//     static getCount():number{
+//         return Person.count
+//     }
+//     public get Id():number{
+//         return this.id
+//     }
+//     public set Id(value: number){
+//         this.id = value
+//     }
+//     constructor(public name: string){
+//         this.name = name
+//         this.id = ++Person.count;
+//     }
+// }
+// const[p1,p2] = [new Person('p1'),new Person('p2')] ;
+// console.log(Person.getCount());
+// console.log(p1.Id);
+// p1.Id =  8;
+// console.log(p1.Id);
+
+// //Index signatures
+// interface TransactionObj {
+//     readonly [myindex:string]:number,
+//     abc : number,
+//     xyz : number
+// }
+
+// const o1: TransactionObj = {
+//     abc:-10,
+//     xyz:20,
+//     tmp:2
+// }
+
+// let p = "abc";
+// // o1.p = 2
+// console.log(o1[p]);
+
+//key casting
+interface TransactionObj2 {
+    abc: number,
+    xyz: number
+}
+
+const o2: TransactionObj2 = {
+    abc: -1,
+    xyz: 2,
+}
+
+let p2 = "abc";
+console.log(o2[p2 as keyof TransactionObj2]);
+console.log(o2[p2 as keyof typeof o2]);
+
+type Incomes = Record<'salary' | 'bonus', number>;
+interface I1<T> {
+    value: T,
+    is: boolean
+}
+const ic: Incomes = {
+    salary: 200,
+    bonus: 300
+}
+ic["" as keyof Incomes];
+
+const fn1 = <T>(arg: T): void => {
+    ic[arg as keyof Incomes];
+}
+//generics
+type p = keyof Incomes
+const prnt = <T>(arg: T): T => arg
+
+interface HasId {
+    id: number
+}
+const processUser = <T extends HasId>(user: T): T => {
+    return user
+}
+
+processUser({ id: 1, name: "Vidur" });
+// processUser({name:"Vidur"});
+
+const usrs = [
+    {
+        id:1,
+        "name":"u1",
+        "email":"u1@abc.com"
+    },
+    {
+        id:2,
+        "name":"u2",
+        "email":"u2@abc.com"
     }
-    public getAge(){
-        return this.age;
+];
+const getUsersProp = <T extends HasId, K extends keyof T>(users: T[], key: K): T[K][] => {
+    return users.map(user => user[key]);
+};
+
+const props = getUsersProp(usrs,"email");
+
+class StateObj<T> {
+    private data:T
+    constructor(val:T){
+        this.data = val;
+    }
+    get state():T{
+        return this.data;
+    }
+    set state(val:T){
+        this.data = val;
     }
 }
-class WebDev extends Coder{
-    constructor(
-        public comp:string,
-        name:string,
-        age:number,
-        lang:string
-    ){
-        super(name,age,lang)
-        this.comp = comp
-    }
-    public getLang(){
-        return this.lang;
-    }
-}
 
-
-const c1 = new Coder('Vidur',20);
-c1.name
-
-
-interface Musician{
-    name: string,
-    instrument:string
-    play(action:string):string
-}
-
-class Guitarist implements Musician{
-    public name: string
-    instrument: string
-    constructor(name:string, instrument:string){
-        this.name = name
-        this.instrument = instrument
-    }
-    play(action: string): string {
-        return `${this.name} ${action} the ${this.instrument}`;
-    }
-}
-const g1 = new Guitarist('Abc','Guitar');
-console.log(g1.play("strums"));
-
-//static property and methods
-class Person{
-    static count:number = 0;
-    private id:number
-    static getCount():number{
-        return Person.count
-    }
-    public get Id():number{
-        return this.id
-    }
-    public set Id(value: number){
-        this.id = value
-    }
-    constructor(public name: string){
-        this.name = name
-        this.id = ++Person.count;
-    }
-}
-const[p1,p2] = [new Person('p1'),new Person('p2')] ;
-console.log(Person.getCount());
-console.log(p1.Id);
-p1.Id =  8;
-console.log(p1.Id);
+const st = new StateObj('hello');
+st.state = "hi"
